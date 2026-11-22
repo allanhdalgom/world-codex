@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Cuaderno | World Codex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <header class="navbar">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">✦</span>
+                <span>WORLD CODEX</span>
+            </a>
+
+            <div class="admin-player-switcher">
+                <span class="switcher-label">Editando:</span>
+                <select id="admin-entry-select" class="admin-header-select" aria-label="Seleccionar entrada"></select>
+                <button type="button" id="admin-new-entry-btn" class="nav-new-btn">+ Nueva</button>
+                <button type="button" id="admin-delete-all-btn" class="danger-button-sm">Borrar todo</button>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html">Menú</a>
+                <a href="entry.html" id="admin-view-sheet-link" class="nav-admin-link">Ver esta hoja ↗</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="admin-section">
+                <div class="section-heading">
+                    <span class="section-overline">Mesa de escritura</span>
+                    <h2>Editando: <span id="admin-active-name">Sin entrada</span></h2>
+                    <p>Usa <code>[[Nombre de otra ficha]]</code> (ej. <code>[[Ilabid]]</code>, <code>[[Albus’Dúlra]]</code>, <code>[[Peñas Rojas]]</code>) para enlazar páginas entre sí.</p>
+                </div>
+
+                <!-- ESTADO VACÍO -->
+                <div id="admin-empty-state" class="empty-roster-menu" style="display: none;">
+                    <span class="empty-icon">✦</span>
+                    <h3>Tu cuaderno aún tiene las páginas en blanco</h3>
+                    <p>Crea tu primera entrada, carga tu universo base (Bran, Ilabid, Primigenios...) o importa un respaldo <code>.json</code>.</p>
+                    <form id="quick-create-form" class="quick-create-form">
+                        <input type="text" id="quick-entry-name" placeholder="Nombre (ej. Bran, Ilabid, Nime Fis...)" required>
+                        <button type="submit" class="primary-button">+ Crear primera entrada</button>
+                    </form>
+                    <div style="margin-top: 16px;">
+                        <button type="button" id="admin-load-demo-btn" class="secondary-button">✦ Cargar mi universo base</button>
+                    </div>
+                </div>
+
+                <!-- CONTENEDOR DE PESTAÑAS -->
+                <div id="admin-forms-wrapper">
+
+                    <div class="admin-tabs" role="tablist">
+                        <button type="button" class="admin-tab-btn active" data-tab="tab-identity">1. Identidad, Esencia y Crónica</button>
+                        <button type="button" class="admin-tab-btn" data-tab="tab-gallery">2. Mapas y Referencias</button>
+                        <button type="button" class="admin-tab-btn" data-tab="tab-timeline">3. Cronología (Calendario)</button>
+                        <button type="button" class="admin-tab-btn" data-tab="tab-honors">4. Títulos y Posesiones</button>
+                        <button type="button" class="admin-tab-btn" data-tab="tab-backup">5. Respaldo (.JSON)</button>
+                    </div>
+
+                    <!-- PESTAÑA 1: IDENTIDAD, ESENCIA Y CRÓNICA -->
+                    <div id="tab-identity" class="admin-tab-panel active">
+                        <div class="admin-card">
+                            <h3>Identidad, grupo, canon y conexiones</h3>
+                            <form id="identity-form">
+                                <div class="form-grid">
+                                    <label>
+                                        Sección / Categoría
+                                        <select id="edit-type">
+                                            <option value="PERSONAJE">Personaje</option>
+                                            <option value="PRIMIGENIO">Primigenio / Esencia</option>
+                                            <option value="MAPA">Mapa / Geografía</option>
+                                            <option value="CIUDAD">Ciudad / Lugar</option>
+                                            <option value="LORE">Lore / Cosmología</option>
+                                            <option value="RELATO">Relato / Capítulo</option>
+                                            <option value="FACCION">Facción / Orden</option>
+                                            <option value="RELIQUIA">Reliquia / Pueblo</option>
+                                        </select>
+                                    </label>
+                                    <label>
+                                        Grupo / Carpeta dentro de la sección
+                                        <input type="text" id="edit-group" list="existing-groups-datalist" placeholder="Ej. Protagonistas, Los Nueve, Continente Austral...">
+                                        <datalist id="existing-groups-datalist"></datalist>
+                                    </label>
+                                    <label>
+                                        Estado de Canon
+                                        <select id="edit-canon">
+                                            <option value="Canon Definitivo">✦ Canon Definitivo</option>
+                                            <option value="Borrador / Explorando">✎ Borrador / Explorando</option>
+                                            <option value="Mito / Versión Antigua">📜 Mito / Versión Antigua</option>
+                                        </select>
+                                    </label>
+                                    <label>
+                                        Nombre completo
+                                        <input type="text" id="edit-name" required>
+                                    </label>
+                                    <label>
+                                        Epíteto, título o lema
+                                        <input type="text" id="edit-epithet" placeholder="Ej. El Sol Verde · Esencia de Vida y Naturaleza">
+                                    </label>
+                                    <label>
+                                        Estado actual
+                                        <input type="text" id="edit-status" placeholder="Ej. Vivo / Aprisionado en el Sol / Activa">
+                                    </label>
+                                    <label>
+                                        Origen / Ubicación (usa [[Lugar]] para enlazar)
+                                        <input type="text" id="edit-origin" placeholder="Ej. [[Peñas Rojas]] / [[Bahía de Dún]]">
+                                    </label>
+                                    <label>
+                                        Rol / Arquetipo / Clasificación
+                                        <input type="text" id="edit-role" placeholder="Ej. Carpintero naval / Teocracia">
+                                    </label>
+                                    <label>
+                                        Facción / Lealtad (usa [[Facción]] para enlazar)
+                                        <input type="text" id="edit-faction" placeholder="Ej. [[Ilabid]]">
+                                    </label>
+                                    <label>
+                                        Esencia / Tocado por (usa [[Primigenio]])
+                                        <input type="text" id="edit-essence" placeholder="Ej. [[Albus’Dúlra]], [[Nime Fis]] o Ninguna">
+                                    </label>
+                                    <label>
+                                        Sello corto / Año / Código
+                                        <input type="text" id="edit-era-code" maxlength="14" placeholder="Ej. IV Era / 1367">
+                                    </label>
+                                    <label>
+                                        URL de imagen principal / mapa / retrato
+                                        <input type="url" id="edit-portrait" placeholder="https://...">
+                                    </label>
+                                    <label>
+                                        URL de emblema / símbolo (opcional)
+                                        <input type="url" id="edit-emblem" placeholder="https://...">
+                                    </label>
+                                </div>
+
+                                <div class="form-grid-single">
+                                    <label>
+                                        Descripción general / Don o atmósfera (puedes usar [[Enlaces]])
+                                        <textarea id="edit-summary" rows="3" placeholder="Redacta su presencia, aspecto o el don que otorga esta Esencia..."></textarea>
+                                    </label>
+                                    <label>
+                                        Historia, biografía, texto del relato o leyenda
+                                        <textarea id="edit-history" rows="6" placeholder="Redacta su pasado, origen o el capítulo completo..."></textarea>
+                                    </label>
+                                    <label>
+                                        Notas al margen / Precio de la magia / Dilemas filosóficos
+                                        <textarea id="edit-notes" rows="3" placeholder="Ej. Pertenecer vs. perderse; estigma en Ilabid; preguntas abiertas..."></textarea>
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="admin-button">Guardar hoja</button>
+                            </form>
+                        </div>
+
+                        <div class="admin-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+                                <h3 style="margin:0;">Atributos numéricos (Opcional)</h3>
+                                <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; cursor:pointer;">
+                                    <input type="checkbox" id="edit-show-attributes" style="width:auto;">
+                                    Mostrar barras de atributos (0–100) en esta hoja
+                                </label>
+                            </div>
+                            <p class="form-description">Actívalo para personajes, facciones o ciudades donde quieras medir capacidades; déjalo desactivado para relatos o mapas.</p>
+                            <form id="attributes-form">
+                                <div class="form-grid">
+                                    <label>Nombre Atributo 1 <input type="text" id="attr-1-name" value="PODER / DEFENSA" required></label>
+                                    <label>Valor Atributo 1 (0-100) <input type="number" id="attr-1-input" min="0" max="100" required></label>
+                                    <label>Nombre Atributo 2 <input type="text" id="attr-2-name" value="INFLUENCIA POLÍTICA" required></label>
+                                    <label>Valor Atributo 2 (0-100) <input type="number" id="attr-2-input" min="0" max="100" required></label>
+                                    <label>Nombre Atributo 3 <input type="text" id="attr-3-name" value="SABER / ESTRATEGIA" required></label>
+                                    <label>Valor Atributo 3 (0-100) <input type="number" id="attr-3-input" min="0" max="100" required></label>
+                                    <label>Nombre Atributo 4 <input type="text" id="attr-4-name" value="AFINIDAD CÓSMICA" required></label>
+                                    <label>Valor Atributo 4 (0-100) <input type="number" id="attr-4-input" min="0" max="100" required></label>
+                                </div>
+                                <button type="submit" class="admin-button">Guardar atributos</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- PESTAÑA 2: GALERÍA DE MAPAS Y REFERENCIAS -->
+                    <div id="tab-gallery" class="admin-tab-panel">
+                        <div class="admin-card">
+                            <h3>Pegar mapa o imagen de referencia al tablero</h3>
+                            <p class="form-description">Ideal para subir tus mapas dibujados a mano (Continente Austral, Oriental, Occidental, Mapa antiguo) o bocetos.</p>
+                            <form id="gallery-form">
+                                <div class="form-grid">
+                                    <label>Título de la referencia <input type="text" id="ref-title" placeholder="Ej. Continente Austral / Mapa antiguo" required></label>
+                                    <label>
+                                        Categoría visual
+                                        <select id="ref-category">
+                                            <option value="Mapa / Cartografía">Mapa / Cartografía</option>
+                                            <option value="Retrato / Apariencia">Retrato / Apariencia</option>
+                                            <option value="Arquitectura / Entorno">Arquitectura / Entorno</option>
+                                            <option value="Cosmología / Sol Verde">Cosmología / Sol Verde</option>
+                                            <option value="Vestimenta / Equipo">Vestimenta / Equipo</option>
+                                        </select>
+                                    </label>
+                                    <label>Enlace URL (opcional si subes archivo) <input type="url" id="ref-url" placeholder="https://..."></label>
+                                    <label>O subir archivo desde tu PC / Teléfono <input type="file" id="ref-file" accept="image/*"></label>
+                                </div>
+                                <div class="form-grid-single">
+                                    <label>Nota o pie de foto <input type="text" id="ref-caption" placeholder="Detalles topográficos, climas o notas..."></label>
+                                </div>
+                                <button type="submit" class="admin-button">Añadir al tablero</button>
+                            </form>
+
+                            <div class="admin-managed-list-wrapper">
+                                <h4>Referencias guardadas (<span id="admin-gallery-count">0</span>)</h4>
+                                <div id="admin-gallery-list" class="admin-gallery-preview-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PESTAÑA 3: CRONOLOGÍA CON CALENDARIO DEL MUNDO -->
+                    <div id="tab-timeline" class="admin-tab-panel">
+                        <div class="admin-card">
+                            <h3>Añadir suceso con el Calendario de 20 Meses</h3>
+
+                            <!-- CONSTRUCTOR DE FECHA DEL MUNDO -->
+                            <div class="calendar-builder-box">
+                                <span class="lore-tag">CONSTRUCTOR DE FECHA DEL MUNDO (360 DÍAS · 2 CICLOS DE 9 DÍAS)</span>
+                                <div class="calendar-builder-grid">
+                                    <select id="cal-day" aria-label="Día del ciclo">
+                                        <option value="Comrád">1. Comrád (Lealtad y Unión)</option>
+                                        <option value="Aislings">2. Aislings (Silencio y Sueños)</option>
+                                        <option value="Bheatha" selected>3. Bheatha (Naturaleza y Vida)</option>
+                                        <option value="Comarbae">4. Comarbae (Justicia y Fuerza)</option>
+                                        <option value="Cathair">5. Cathair (Fortaleza y Pasión)</option>
+                                        <option value="Suaimneas">6. Suaimneas (Serenidad y Amor)</option>
+                                        <option value="Ocras">7. Ocras (Lucha y Valía)</option>
+                                        <option value="Grian">8. Grian (Luz y Conocimiento)</option>
+                                        <option value="Uisce">9. Uisce (Abismo y Oscuridad)</option>
+                                    </select>
+
+                                    <select id="cal-cycle" aria-label="Ciclo">
+                                        <option value="I Ciclo">I Ciclo (Días 1-9)</option>
+                                        <option value="II Ciclo">II Ciclo (Días 10-18)</option>
+                                    </select>
+
+                                    <select id="cal-month" aria-label="Mes">
+                                        <option value="Dílse">1. Dílse (Lealtad)</option>
+                                        <option value="Tathlum">2. Tathlum (Silencio)</option>
+                                        <option value="Dúthaig">3. Dúthaig (Naturaleza)</option>
+                                        <option value="Coire">4. Coire (Justicia)</option>
+                                        <option value="Dún">5. Dún (Fortaleza)</option>
+                                        <option value="Réidh">6. Réidh (Serenidad)</option>
+                                        <option value="Troith">7. Troith (Lucha)</option>
+                                        <option value="Solus">8. Solus (Luz)</option>
+                                        <option value="Biorán" selected>9. Biorán (Abismo)</option>
+                                        <option value="Comhlanm">10. Comhlanm (Unión)</option>
+                                        <option value="Brionglóid">11. Brionglóid (Sueños)</option>
+                                        <option value="Mealladh">12. Mealladh (Fascinación)</option>
+                                        <option value="Neart’Cóir">13. Neart’Cóir (Fuerza Equitativa)</option>
+                                        <option value="Grá’teann">14. Grá’teann (Pasión Ardiente)</option>
+                                        <option value="Grá’Gansrianta">15. Grá’Gansrianta (Amor Incondicional)</option>
+                                        <option value="Luach’Féin">16. Luach’Féin (Darse Valía)</option>
+                                        <option value="Eolas Neamhchúla">17. Eolas (Conocimiento Celestial)</option>
+                                        <option value="Dorchadas">18. Dorchadas (Oscuridad)</option>
+                                        <option value="Grian’uaine">19. Grian’uaine (Sol Verde)</option>
+                                        <option value="Glasghorm">20. Glasghorm (VerdeLuz)</option>
+                                    </select>
+
+                                    <input type="text" id="cal-year" value="1367" placeholder="Año (ej. 1367)">
+                                    <input type="text" id="cal-era" value="Cuarta Era" placeholder="Era (ej. Cuarta Era)">
+                                    <button type="button" id="apply-world-date-btn" class="secondary-button">↓ Usar esta fecha</button>
+                                </div>
+                            </div>
+
+                            <form id="timeline-form">
+                                <div class="form-grid">
+                                    <label>Fecha del mundo (generada o escrita) <input type="text" id="event-year" placeholder="Ej. Bheatha I Ciclo, Biorán, 1367. Cuarta Era" required></label>
+                                    <label>Título del suceso <input type="text" id="event-title" placeholder="Ej. Desembarco en Bahía de Dún" required></label>
+                                    <label>Lugar (usa [[Lugar]] para enlazar) <input type="text" id="event-location" placeholder="Ej. [[Bahía de Dún]]" required></label>
+                                    <label>
+                                        Tipo de hito
+                                        <select id="event-impact">
+                                            <option value="Evento Narrativo">Evento Narrativo</option>
+                                            <option value="Hito Cósmico">Hito Cósmico</option>
+                                            <option value="Gran Guerra / Batalla">Gran Guerra / Batalla</option>
+                                            <option value="Fundación / Tratado">Fundación / Tratado</option>
+                                            <option value="Despertar de Esencia">Despertar de Esencia</option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="form-grid-single">
+                                    <label>Lo que ocurrió (puedes usar [[Enlaces]]) <textarea id="event-desc" rows="3" required></textarea></label>
+                                </div>
+                                <button type="submit" class="admin-button">Añadir a la cronología</button>
+                            </form>
+
+                            <div class="admin-managed-list-wrapper">
+                                <h4>Eventos registrados (<span id="admin-timeline-count">0</span>)</h4>
+                                <div id="admin-timeline-list" class="admin-managed-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PESTAÑA 4: TÍTULOS Y POSESIONES -->
+                    <div id="tab-honors" class="admin-tab-panel">
+                        <div class="admin-card">
+                            <h3>Añadir título, hazaña o posesión</h3>
+                            <form id="honor-form">
+                                <div class="form-grid">
+                                    <label>Nombre del título / hazaña / objeto <input type="text" id="honor-name" required></label>
+                                    <label>Año o Era <input type="text" id="honor-year" required></label>
+                                    <label>Contexto / Reino (usa [[Nombre]]) <input type="text" id="honor-context" required></label>
+                                    <label>URL de icono (opcional) <input type="url" id="honor-image" placeholder="https://..."></label>
+                                </div>
+                                <button type="submit" class="admin-button">Añadir registro</button>
+                            </form>
+
+                            <div class="admin-managed-list-wrapper">
+                                <h4>Registros guardados (<span id="admin-honors-count">0</span>)</h4>
+                                <div id="admin-honors-list" class="admin-managed-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PESTAÑA 5: RESPALDO -->
+                    <div id="tab-backup" class="admin-tab-panel">
+                        <div class="admin-card backup-card">
+                            <h3>Respaldo y sincronización (.JSON)</h3>
+                            <p class="form-description">Descarga todo tu compendio en un archivo <code>.json</code> para guardarlo en tu carpeta de Google Drive o cargarlo en otro dispositivo.</p>
+                            <div class="admin-form-actions">
+                                <button type="button" id="export-data-btn" class="admin-button">↓ Exportar compendio (.JSON)</button>
+                                <button type="button" id="import-data-btn" class="secondary-button">↑ Importar compendio (.JSON)</button>
+                                <button type="button" id="tab-load-demo-btn" class="secondary-button">✦ Cargar mi universo base</button>
+                                <input type="file" id="import-file-input" accept=".json,application/json" hidden>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <div id="save-message" class="save-message" role="status" aria-live="polite"></div>
+
+        <footer class="footer">
+            <div class="footer-brand">WORLD CODEX</div>
+            <p><a href="index.html" style="text-decoration: underline;">Volver al menú principal</a></p>
+            <span class="footer-symbol">✦</span>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

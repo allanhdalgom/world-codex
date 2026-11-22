@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha | World Codex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <header class="navbar">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">✦</span>
+                <span>WORLD CODEX</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html">Menú</a>
+                <a href="section.html?type=PERSONAJE" id="back-to-section-link">← Volver a la sección</a>
+                <a href="#lore">Crónica</a>
+                <a href="#gallery">Referencias</a>
+                <a href="#timeline">Eras</a>
+                <a href="admin.html" id="nav-edit-this-link" class="nav-admin-link">✎ Editar hoja</a>
+            </nav>
+        </header>
+
+        <main>
+
+            <!-- PRESENTACIÓN DE LA FICHA -->
+            <section class="hero" id="overview">
+                <div class="hero-layout">
+                    <div class="hero-content">
+
+                        <div class="hero-top-meta">
+                            <span class="hero-label" id="entry-type-label">PERSONAJE</span>
+                            <span class="group-pill" id="entry-group-badge">🗂 General</span>
+                            <span class="canon-pill" id="entry-canon-badge">✦ Canon Definitivo</span>
+                            <span class="career-status-pill" id="entry-status-badge">Activo</span>
+                        </div>
+
+                        <h1 id="entry-name">Nombre de la entrada</h1>
+
+                        <p class="hero-subtitle" id="entry-epithet">Epíteto o lema</p>
+
+                        <!-- RUTA DE HITOS / UBICACIONES -->
+                        <div class="club-journey-bar" id="journey-bar" style="display: none;">
+                            <span class="journey-label">RECORRIDO:</span>
+                            <div class="journey-clubs" id="journey-list"></div>
+                        </div>
+
+                        <div class="player-details">
+                            <div class="detail">
+                                <span class="detail-label" id="meta-1-label">ORIGEN / REGIÓN</span>
+                                <span class="detail-value" id="entry-origin">—</span>
+                            </div>
+
+                            <div class="detail">
+                                <span class="detail-label" id="meta-2-label">ROL / ARQUETIPO</span>
+                                <span class="detail-value" id="entry-role">—</span>
+                            </div>
+
+                            <div class="detail">
+                                <span class="detail-label" id="meta-3-label">FACCIÓN / LEALTAD</span>
+                                <div class="club-badge-wrapper">
+                                    <img id="entry-emblem" src="" alt="Emblema" class="club-logo">
+                                    <span class="detail-value" id="entry-faction">—</span>
+                                </div>
+                            </div>
+
+                            <div class="detail">
+                                <span class="detail-label" id="meta-4-label">ESENCIA / TOCADO POR</span>
+                                <span class="detail-value" id="entry-essence">—</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-buttons">
+                            <a href="admin.html" id="hero-edit-btn" class="primary-button">✎ Editar esta hoja</a>
+                            <a href="#gallery" class="secondary-button">Ver referencias</a>
+                            <a href="section.html" id="hero-back-section-btn" class="secondary-button">← Ver todos en esta sección</a>
+                        </div>
+
+                    </div>
+
+                    <!-- RETRATO / MAPA PRINCIPAL -->
+                    <div class="hero-portrait-frame">
+                        <div class="portrait-inner">
+                            <img id="entry-portrait" src="" alt="Imagen principal" class="player-portrait-img">
+                            <span class="portrait-corner-number" id="portrait-code-tag">✦</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-number" id="hero-watermark">✦</div>
+            </section>
+
+            <!-- CRÓNICA Y ENLACES INTERNOS [[Nombre]] -->
+            <section class="lore-section" id="lore">
+                <div class="section-heading">
+                    <span class="section-overline">Páginas de historia</span>
+                    <h2>Crónica y Trasfondo</h2>
+                    <p>Haz clic en los enlaces resaltados para saltar directamente a la página de otro personaje, Primigenio, ciudad o mapa.</p>
+                </div>
+
+                <div class="lore-grid">
+                    <article class="lore-card lore-card-wide">
+                        <span class="lore-tag" id="prose-1-tag">DESCRIPCIÓN Y PRESENCIA</span>
+                        <h3 id="prose-1-title">Aspecto, atmósfera y rasgos clave</h3>
+                        <div id="entry-summary" class="lore-prose">Sin descripción registrada.</div>
+                    </article>
+
+                    <article class="lore-card">
+                        <span class="lore-tag" id="prose-2-tag">HISTORIA Y ORÍGENES</span>
+                        <h3 id="prose-2-title">Biografía, fundación o leyenda</h3>
+                        <div id="entry-history" class="lore-prose">Sin historia registrada.</div>
+                    </article>
+
+                    <article class="lore-card lore-card-secret">
+                        <span class="lore-tag" id="prose-3-tag">NOTAS AL MARGEN / DILEMAS</span>
+                        <h3 id="prose-3-title">Conflictos, precios y secretos</h3>
+                        <div id="entry-notes" class="lore-prose">Sin notas adicionales.</div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ATRIBUTOS (SOLO SE MUESTRAN SI ESTÁN ACTIVADOS EN LA FICHA) -->
+            <section class="statistics-section" id="attributes" style="display: none;">
+                <div class="section-heading">
+                    <span class="section-overline">Rasgos e impacto</span>
+                    <h2>Atributos</h2>
+                </div>
+
+                <div class="statistics-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon">⚔</span>
+                        <span class="stat-number" id="attr-1-val">50</span>
+                        <span class="stat-label" id="attr-1-label">PODER / DEFENSA</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">♛</span>
+                        <span class="stat-number" id="attr-2-val">50</span>
+                        <span class="stat-label" id="attr-2-label">INFLUENCIA POLÍTICA</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">◈</span>
+                        <span class="stat-number" id="attr-3-val">50</span>
+                        <span class="stat-label" id="attr-3-label">SABER / ESTRATEGIA</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">❖</span>
+                        <span class="stat-number" id="attr-4-val">50</span>
+                        <span class="stat-label" id="attr-4-label">RECURSOS / RIQUEZA</span>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <div class="chart-header">
+                        <h3>Balance de capacidades</h3>
+                    </div>
+                    <div class="attribute-bars-container" id="attribute-bars-container"></div>
+                </div>
+            </section>
+
+            <!-- GALERÍA DE IMÁGENES DE REFERENCIA -->
+            <section class="gallery-section" id="gallery">
+                <div class="section-heading">
+                    <span class="section-overline">Tablero de inspiración</span>
+                    <h2>Galería de Referencias</h2>
+                    <p>Mapas dibujados a mano, bocetos, vestimenta o retratos. Haz clic en cualquier imagen para ampliarla.</p>
+                </div>
+
+                <div id="gallery-container" class="gallery-grid"></div>
+            </section>
+
+            <!-- CRONOLOGÍA -->
+            <section class="career-section" id="timeline">
+                <div class="section-heading">
+                    <span class="section-overline">Línea del tiempo (Calendario de 20 meses)</span>
+                    <h2>Cronología y Etapas</h2>
+                </div>
+
+                <div id="timeline-container" class="season-container"></div>
+            </section>
+
+            <!-- TÍTULOS Y POSESIONES -->
+            <section id="honors" class="trophies-section">
+                <div class="section-heading">
+                    <span class="section-overline">Colección y legado</span>
+                    <h2>Títulos, Hazañas y Posesiones</h2>
+                </div>
+
+                <div id="honors-container" class="trophy-container"></div>
+            </section>
+
+        </main>
+
+        <!-- LIGHTBOX -->
+        <div id="lightbox-modal" class="modal-backdrop" aria-hidden="true">
+            <div class="lightbox-content">
+                <button type="button" id="close-lightbox-btn" class="modal-close-btn lightbox-close" aria-label="Cerrar">✕</button>
+                <img id="lightbox-img" src="" alt="Vista ampliada">
+                <div class="lightbox-caption">
+                    <h4 id="lightbox-title"></h4>
+                    <p id="lightbox-desc"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="save-message" class="save-message" role="status" aria-live="polite"></div>
+
+        <footer class="footer">
+            <div class="footer-brand">WORLD CODEX</div>
+            <p><a href="index.html" style="text-decoration: underline;">Volver al menú principal</a></p>
+            <span class="footer-symbol">✦</span>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

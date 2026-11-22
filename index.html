@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Codex | Cuaderno de Mundos e Historias</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <header class="navbar">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">✦</span>
+                <span>WORLD CODEX</span>
+            </a>
+
+            <nav class="nav-links">
+                <button type="button" id="global-new-entry-btn" class="nav-new-btn">+ Nueva entrada</button>
+                <a href="admin.html" class="nav-admin-link">Editor ↗</a>
+            </nav>
+
+            <div class="career-status">
+                <span class="status-dot"></span>
+                Cuaderno Abierto
+            </div>
+        </header>
+
+        <main>
+            <section class="portal-section portal-standalone">
+                <div class="portal-header">
+                    <span class="section-overline">Tu mesa de creación</span>
+                    <h1>¿Qué rincón de tu mundo vas a explorar hoy?</h1>
+                    <p>Selecciona un apartado para abrir su archivo, organizar tus fichas en grupos o redactar nuevas páginas conectadas.</p>
+                </div>
+
+                <div class="portal-grid">
+                    <a href="section.html?type=PERSONAJE" class="portal-card">
+                        <span class="portal-icon">✒️</span>
+                        <div class="portal-card-text">
+                            <h3>Personajes</h3>
+                            <p>Protagonistas, viajeros, Tocados, nobles y figuras clave.</p>
+                        </div>
+                        <span class="portal-count" id="count-PERSONAJE">0</span>
+                    </a>
+
+                    <a href="section.html?type=PRIMIGENIO" class="portal-card portal-card-cosmic">
+                        <span class="portal-icon">☀️</span>
+                        <div class="portal-card-text">
+                            <h3>Primigenios y Esencias</h3>
+                            <p>Los Nueve del Sol Verde, sus dones, precios y maldiciones.</p>
+                        </div>
+                        <span class="portal-count" id="count-PRIMIGENIO">0</span>
+                    </a>
+
+                    <a href="section.html?type=MAPA" class="portal-card">
+                        <span class="portal-icon">🧭</span>
+                        <div class="portal-card-text">
+                            <h3>Mapas y Geografía</h3>
+                            <p>Continentes, cordilleras, climas y planos antiguos.</p>
+                        </div>
+                        <span class="portal-count" id="count-MAPA">0</span>
+                    </a>
+
+                    <a href="section.html?type=CIUDAD" class="portal-card">
+                        <span class="portal-icon">🏛️</span>
+                        <div class="portal-card-text">
+                            <h3>Ciudades y Lugares</h3>
+                            <p>Ilabid, Bahía de Dún, Peñas Rojas, fortalezas y puertos.</p>
+                        </div>
+                        <span class="portal-count" id="count-CIUDAD">0</span>
+                    </a>
+
+                    <a href="section.html?type=LORE" class="portal-card">
+                        <span class="portal-icon">📜</span>
+                        <div class="portal-card-text">
+                            <h3>Lore y Cosmología</h3>
+                            <p>El Sol Verde, agujeros negros, calendarios y leyes del mundo.</p>
+                        </div>
+                        <span class="portal-count" id="count-LORE">0</span>
+                    </a>
+
+                    <a href="section.html?type=RELATO" class="portal-card">
+                        <span class="portal-icon">📖</span>
+                        <div class="portal-card-text">
+                            <h3>Relatos y Capítulos</h3>
+                            <p>Escenas, borradores narrativos y capítulos enlazados.</p>
+                        </div>
+                        <span class="portal-count" id="count-RELATO">0</span>
+                    </a>
+
+                    <a href="section.html?type=FACCION" class="portal-card">
+                        <span class="portal-icon">⚜️</span>
+                        <div class="portal-card-text">
+                            <h3>Facciones y Órdenes</h3>
+                            <p>Órdenes religiosas, casas nobles, flotas y gremios.</p>
+                        </div>
+                        <span class="portal-count" id="count-FACCION">0</span>
+                    </a>
+
+                    <a href="section.html?type=RELIQUIA" class="portal-card">
+                        <span class="portal-icon">🗝️</span>
+                        <div class="portal-card-text">
+                            <h3>Reliquias y Pueblos</h3>
+                            <p>Artefactos, culturas, linajes y criaturas del mundo.</p>
+                        </div>
+                        <span class="portal-count" id="count-RELIQUIA">0</span>
+                    </a>
+
+                    <a href="section.html?type=ALL" class="portal-card">
+                        <span class="portal-icon">📚</span>
+                        <div class="portal-card-text">
+                            <h3>Archivo Completo</h3>
+                            <p>Explorar todas las entradas del universo sin filtros.</p>
+                        </div>
+                        <span class="portal-count" id="count-ALL">0</span>
+                    </a>
+                </div>
+
+                <!-- ACCIONES RÁPIDAS DEL PORTAL -->
+                <div class="portal-footer-actions">
+                    <button type="button" id="portal-demo-btn" class="primary-button">✦ Cargar mi universo base (Bran, Ilabid, Primigenios...)</button>
+                    <a href="admin.html?tab=backup" class="secondary-button">⇅ Respaldo / Importar (.JSON)</a>
+                </div>
+            </section>
+        </main>
+
+        <div id="save-message" class="save-message" role="status" aria-live="polite"></div>
+
+        <footer class="footer">
+            <div class="footer-brand">WORLD CODEX</div>
+            <p>Un cuaderno vivo para tus historias, mapas y personajes.</p>
+            <span class="footer-symbol">✦</span>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección | World Codex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <header class="navbar">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">✦</span>
+                <span>WORLD CODEX</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html">← Menú</a>
+                <a href="section.html?type=PERSONAJE">Personajes</a>
+                <a href="section.html?type=PRIMIGENIO">Primigenios</a>
+                <a href="section.html?type=MAPA">Mapas</a>
+                <a href="section.html?type=CIUDAD">Ciudades</a>
+                <a href="section.html?type=LORE">Lore</a>
+                <a href="section.html?type=RELATO">Relatos</a>
+                <button type="button" id="section-new-btn" class="nav-new-btn">+ Crear aquí</button>
+                <a href="admin.html" class="nav-admin-link">Editor ↗</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="players-section">
+                <div class="section-heading">
+                    <span class="section-overline" id="section-overline">Apartado del cuaderno</span>
+                    <h1 id="section-title" class="section-page-title">Personajes</h1>
+                    <p id="section-subtitle">Organiza tus entradas en grupos personalizados o ábrelas para leer su crónica.</p>
+                </div>
+
+                <div class="roster-toolbar">
+                    <div class="players-actions">
+                        <button id="section-create-main-btn" class="primary-button" type="button">+ Nueva ficha en esta sección</button>
+                        <button id="toggle-group-view-btn" class="secondary-button" type="button">🗂 Vista: Agrupada por grupos</button>
+                    </div>
+
+                    <div class="roster-filters">
+                        <input type="search" id="section-search-input" class="roster-search-input" placeholder="Buscar por nombre, esencia, lugar o grupo...">
+                        <select id="section-group-filter" class="roster-filter-select" aria-label="Filtrar por grupo">
+                            <option value="ALL">Todos los grupos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="section-entries-container"></div>
+
+                <!-- COMPARATIVA (SOLO EN PERSONAJES Y FACCIONES) -->
+                <div class="comparison-panel" id="comparison-panel" style="display: none;">
+                    <div class="comparison-header">
+                        <div>
+                            <span class="section-overline">Contraste creativo</span>
+                            <h3>Comparar cara a cara</h3>
+                        </div>
+                        <div class="comparison-selectors">
+                            <select id="compare-entry-a" class="admin-header-select" aria-label="Entrada A"></select>
+                            <span class="vs-badge">vs</span>
+                            <select id="compare-entry-b" class="admin-header-select" aria-label="Entrada B"></select>
+                        </div>
+                    </div>
+                    <div id="comparison-results" class="comparison-results"></div>
+                </div>
+            </section>
+        </main>
+
+        <div id="save-message" class="save-message" role="status" aria-live="polite"></div>
+
+        <footer class="footer">
+            <div class="footer-brand">WORLD CODEX</div>
+            <p><a href="index.html" style="text-decoration: underline;">Volver al menú principal</a></p>
+            <span class="footer-symbol">✦</span>
+        </footer>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
