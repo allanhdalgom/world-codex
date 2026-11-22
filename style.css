@@ -111,6 +111,7 @@ main { flex: 1; }
 .portal-card {
     background: var(--surface);
     border: 1.5px solid var(--border);
+    border-left: 5px solid var(--accent);
     border-radius: 16px;
     padding: 24px;
     display: flex;
@@ -124,16 +125,16 @@ main { flex: 1; }
 .portal-card:hover { transform: translateY(-4px); border-color: var(--accent); background: #fffaf4; }
 .portal-card-cosmic { border-left: 5px solid var(--forest); }
 
-/* Colores resaltados por sección en el portal */
-.portal-card:nth-child(1) { border-left: 5px solid var(--forest); }    /* Personajes */
-.portal-card:nth-child(2) { border-left: 5px solid #1f4231; }         /* Primigenios y Esencias */
-.portal-card:nth-child(3) { border-left: 5px solid #3b6e8c; }         /* Mapas y Geografía */
-.portal-card:nth-child(4) { border-left: 5px solid #8c5a32; }         /* Ciudades y Lugares */
-.portal-card:nth-child(5) { border-left: 5px solid var(--accent); }    /* Lore y Cosmología */
-.portal-card:nth-child(6) { border-left: 5px solid #6b4c7a; }         /* Relatos y Capítulos */
-.portal-card:nth-child(7) { border-left: 5px solid var(--ochre); }     /* Facciones y Órdenes */
-.portal-card:nth-child(8) { border-left: 5px solid #4f6d52; }         /* Reliquias y Pueblos */
-.portal-card:nth-child(9) { border-left: 5px solid var(--muted); }     /* Archivo Completo */
+/* Línea de color distinta por cada tarjeta del portal */
+.portal-grid .portal-card:nth-child(1) { border-left: 5px solid #2e5a44; } /* Verde bosque */
+.portal-grid .portal-card:nth-child(2) { border-left: 5px solid #1b7a5e; } /* Esmeralda */
+.portal-grid .portal-card:nth-child(3) { border-left: 5px solid #2b6cb0; } /* Azul profundo */
+.portal-grid .portal-card:nth-child(4) { border-left: 5px solid #8c5230; } /* Tierra / bronce */
+.portal-grid .portal-card:nth-child(5) { border-left: 5px solid #c85a32; } /* Terracota / acento */
+.portal-grid .portal-card:nth-child(6) { border-left: 5px solid #6b46c1; } /* Violeta / tinta */
+.portal-grid .portal-card:nth-child(7) { border-left: 5px solid #d99b26; } /* Ocre / dorado */
+.portal-grid .portal-card:nth-child(8) { border-left: 5px solid #b8325a; } /* Carmesí */
+.portal-grid .portal-card:nth-child(9) { border-left: 5px solid #4a5568; } /* Pizarra */
 
 .portal-icon { font-size: 26px; line-height: 1; background: var(--surface-alt); padding: 12px; border-radius: 12px; flex-shrink: 0; }
 .portal-card-text { flex: 1; }
