@@ -223,8 +223,23 @@ function createDemoWorld() {
 }
 
 // =========================================
-// ALMACENAMIENTO Y PARÁMETROS URL
+// ALMACENAMIENTO LOCAL + GOOGLE APPS SCRIPT
 // =========================================
+
+let isApplyingRemoteData = false;
+
+function normalizeEntries(entries) {
+    if (!Array.isArray(entries)) return [];
+    entries.forEach(e => {
+        if (!e.group) e.group = "General";
+        if (!e.canonStatus) e.canonStatus = "Canon Definitivo";
+        if (!e.essence) e.essence = "Ninguna";
+        if (typeof e.showAttributes !== "boolean") {
+            e.showAttributes = (e.type === "PERSONAJE" || e.type === "FACCION");
+        }
+    });
+    return entries;
+}
 
 function loadAppState() {
     try {
@@ -232,24 +247,21 @@ function loadAppState() {
         if (saved) {
             const parsed = JSON.parse(saved);
             if (Array.isArray(parsed.entries)) {
-                parsed.entries.forEach(e => {
-                    if (!e.group) e.group = "General";
-                    if (!e.canonStatus) e.canonStatus = "Canon Definitivo";
-                    if (!e.essence) e.essence = "Ninguna";
-                    if (typeof e.showAttributes !== "boolean") {
-                        e.showAttributes = (e.type === "PERSONAJE" || e.type === "FACCION");
-                    }
-                });
-                if (parsed.entries.length === 0) return { activeEntryId: null, entries: [] };
+                normalizeEntries(parsed.entries);
+                if (parsed.entries.length === 0) return { activeEntryId: null, entries: [], updatedAt: 0 };
                 if (!parsed.activeEntryId || !parsed.entries.some(e => e.id === parsed.activeEntryId)) {
                     parsed.activeEntryId = parsed.entries[0].id;
                 }
-                return parsed;
+                return {
+                    activeEntryId: parsed.activeEntryId,
+                    entries: parsed.entries,
+                    updatedAt: parsed.updatedAt || 0
+                };
             }
         }
-        return { activeEntryId: null, entries: [] };
+        return { activeEntryId: null, entries: [], updatedAt: 0 };
     } catch (error) {
-        return { activeEntryId: null, entries: [] };
+        return { activeEntryId: null, entries: [], updatedAt: 0 };
     }
 }
 
@@ -281,16 +293,7 @@ function getActiveEntry() {
 }
 
 let currentEntry = getActiveEntry();
-
 let toastTimeoutId = null;
-function saveData(customMessage = "¡Cambios guardados!") {
-    try {
-        localStorage.setItem("worldCodexData", JSON.stringify(appState));
-        if (customMessage) showMessage(customMessage);
-    } catch (error) {
-        showMessage("Memoria llena: usa URLs externas para imágenes o exporta un respaldo .json.", true);
-    }
-}
 
 function showMessage(message, isError = false) {
     const el = document.getElementById("save-message");
@@ -300,6 +303,135 @@ function showMessage(message, isError = false) {
     el.classList.toggle("toast-error", isError);
     el.classList.add("show");
     toastTimeoutId = setTimeout(() => el.classList.remove("show"), 3500);
+}
+
+function getSyncEndpoint() {
+    const url = (window.APPS_SCRIPT_SYNC_URL || "").trim();
+    if (!url || url.includes("PEGA_AQUI")) return null;
+    return url;
+}
+
+function updateCloudWidgetUI(state = "idle") {
+    const widget = document.getElementById("cloud-sync-widget");
+    if (!widget) return;
+
+    const endpoint = getSyncEndpoint();
+    if (!endpoint) {
+        widget.innerHTML = `<span class="roster-group-tag" title="Agrega tu URL en apps-script-config.js">💾 Solo local</span>`;
+        return;
+    }
+
+    const text = state === "syncing" ? "Sincronizando..." : "☁ Drive Sync";
+    widget.innerHTML = `
+        <button type="button" id="manual-cloud-sync-btn" class="cloud-status-pill" title="Haz clic para sincronizar ahora con Google Drive">
+            <span class="cloud-dot ${state === "syncing" ? "syncing" : ""}"></span>
+            <span>${text}</span>
+        </button>
+    `;
+
+    document.getElementById("manual-cloud-sync-btn")?.addEventListener("click", () => {
+        pullFromDrive(true);
+    });
+}
+
+function refreshCurrentPageViews() {
+    currentEntry = getActiveEntry();
+    initPortalPage();
+    if (document.getElementById("section-entries-container")) {
+        const currentType = (urlParams.get("type") || "PERSONAJE").toUpperCase();
+        renderSectionEntries(currentType);
+    }
+    if (document.getElementById("entry-name")) {
+        initEntryPage();
+    }
+    if (document.getElementById("admin-forms-wrapper")) {
+        fillAdminForms();
+    }
+}
+
+async function pushToDrive() {
+    const endpoint = getSyncEndpoint();
+    if (!endpoint || isApplyingRemoteData) return;
+
+    try {
+        updateCloudWidgetUI("syncing");
+        const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                activeEntryId: appState.activeEntryId || null,
+                entries: appState.entries,
+                updatedAt: appState.updatedAt || Date.now()
+            })
+        });
+        const result = await res.json();
+        if (result && result.ok && result.skippedOlder && result.data && Array.isArray(result.data.entries)) {
+            isApplyingRemoteData = true;
+            appState.entries = normalizeEntries(result.data.entries);
+            appState.activeEntryId = result.data.activeEntryId || appState.entries[0]?.id || null;
+            appState.updatedAt = Number(result.data.updatedAt || Date.now());
+            localStorage.setItem("worldCodexData", JSON.stringify(appState));
+            refreshCurrentPageViews();
+            isApplyingRemoteData = false;
+        }
+        updateCloudWidgetUI("idle");
+    } catch (err) {
+        console.error("Error enviando a Apps Script:", err);
+        updateCloudWidgetUI("idle");
+        showMessage("No se pudo sincronizar con Drive. Revisa la URL del script.", true);
+    }
+}
+
+async function pullFromDrive(showToastIfSame = false) {
+    const endpoint = getSyncEndpoint();
+    if (!endpoint) {
+        updateCloudWidgetUI("idle");
+        return;
+    }
+
+    try {
+        updateCloudWidgetUI("syncing");
+        const res = await fetch(endpoint, { method: "GET", cache: "no-store" });
+        const result = await res.json();
+
+        if (result && result.ok && result.data) {
+            const remoteData = result.data;
+            const remoteUpdated = Number(remoteData.updatedAt || 0);
+            const localUpdated = Number(appState.updatedAt || 0);
+            const hasRemoteEntries = Array.isArray(remoteData.entries) && remoteData.entries.length > 0;
+            const hasLocalEntries = Array.isArray(appState.entries) && appState.entries.length > 0;
+
+            if (hasRemoteEntries && remoteUpdated > localUpdated) {
+                isApplyingRemoteData = true;
+                appState.entries = normalizeEntries(remoteData.entries);
+                appState.activeEntryId = remoteData.activeEntryId || appState.entries[0]?.id || null;
+                appState.updatedAt = remoteUpdated;
+                localStorage.setItem("worldCodexData", JSON.stringify(appState));
+                refreshCurrentPageViews();
+                isApplyingRemoteData = false;
+                showMessage("☁ Actualizado desde Google Drive");
+            } else if (!hasRemoteEntries && hasLocalEntries) {
+                await pushToDrive();
+            } else if (showToastIfSame) {
+                showMessage("☁ Ya estás al día con Drive");
+            }
+        }
+        updateCloudWidgetUI("idle");
+    } catch (err) {
+        console.error("Error leyendo desde Apps Script:", err);
+        updateCloudWidgetUI("idle");
+    }
+}
+
+function saveData(customMessage = "¡Cambios guardados!") {
+    appState.updatedAt = Date.now();
+    try {
+        localStorage.setItem("worldCodexData", JSON.stringify(appState));
+        if (customMessage) showMessage(customMessage);
+    } catch (error) {
+        showMessage("Memoria local llena: usa URLs para imágenes o exporta un respaldo .json.", true);
+    }
+    pushToDrive();
 }
 
 // =========================================
@@ -1372,3 +1504,5 @@ initPortalPage();
 initSectionPage();
 initEntryPage();
 initAdminPage();
+updateCloudWidgetUI("idle");
+pullFromDrive(false);

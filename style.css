@@ -430,3 +430,49 @@ section:not(.hero):not(.portal-section) { padding: 64px 8%; }
     .nav-links { justify-content: center; }
     .form-grid { grid-template-columns: 1fr; }
 }
+/* =========================================
+   SYNC WIDGET (GOOGLE APPS SCRIPT)
+========================================= */
+
+.cloud-sync-widget {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cloud-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(46, 90, 68, 0.12);
+    border: 1.5px solid var(--forest);
+    color: var(--forest);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cloud-status-pill:hover {
+    background: var(--forest);
+    color: #ffffff;
+}
+
+.cloud-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--forest);
+}
+
+.cloud-dot.syncing {
+    background: var(--ochre);
+    animation: pulseSync 1s infinite alternate;
+}
+
+@keyframes pulseSync {
+    from { opacity: 0.4; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1.2); }
+}
